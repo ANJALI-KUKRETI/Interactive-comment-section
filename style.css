@@ -201,3 +201,133 @@ body {
 .reply img {
   margin: 0px 8px;
 }
+.footer {
+  display: none;
+}
+
+/* =================================Responsive============================== */
+@media screen and (max-width: 768px) {
+  .wrapper {
+    max-width: 80%;
+  }
+  .two {
+    width: 32rem;
+  }
+  .row {
+    width: 38rem;
+    /* padding: 12px 8px; */
+  }
+  .details {
+    width: 32rem;
+  }
+  .inputBox {
+    width: 38rem;
+  }
+  .addComment {
+    width: 25rem;
+  }
+  .innerRow {
+    width: 33rem;
+  }
+  .innerRow > .details {
+    width: 28rem;
+  }
+  .innerRow > .details > .two {
+    width: 28rem;
+  }
+}
+@media screen and (max-width: 645px) {
+  .two {
+    width: 26rem;
+  }
+  .row {
+    width: 32rem;
+    /* padding: 12px 8px; */
+  }
+  .details {
+    width: 26rem;
+  }
+  .inputBox {
+    width: 32rem;
+  }
+  .addComment {
+    width: 25rem;
+  }
+  .innerRow {
+    width: 27rem;
+  }
+  .innerRow > .details {
+    width: 22rem;
+  }
+  .innerRow > .details > .two {
+    width: 22rem;
+  }
+}
+@media screen and (max-width: 560px) {
+  .wrapper {
+    font-size: 13px;
+  }
+  .two {
+    width: 18rem;
+  }
+  .row {
+    width: 20rem;
+    padding: 10px 5px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .details {
+    width: 17rem;
+  }
+  .personal {
+    width: 14rem;
+  }
+  .inputBox {
+    width: 20rem;
+  }
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 16rem;
+    margin-top: 5px;
+  }
+  .upper .vote {
+    display: none;
+  }
+  .upper .reply {
+    display: none;
+  }
+  .lower .vote {
+    width: 5rem;
+    flex-direction: row;
+    height: 2rem;
+  }
+  .addComment {
+    width: 20rem;
+  }
+  .innerContainer {
+    margin-left: 5px;
+  }
+  .innerRow {
+    width: 19rem;
+    padding: 10px 5px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .innerRow .footer {
+    width: 15rem;
+  }
+  .innerRow > .details {
+    width: 14rem;
+  }
+  .innerRow > .details > .two {
+    width: 14rem;
+  }
+  .innerRow .lower .reply {
+    width: 8rem;
+  }
+  .me .reply {
+    width: 9rem;
+  }
+} ;

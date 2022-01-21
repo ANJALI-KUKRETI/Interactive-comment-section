@@ -13,10 +13,12 @@ async function getData() {
 }
 function commentsHTML(comment, row) {
   const html = `  <div class="${row}" data-value=${comment.id}>
+  <div class="upper">
   <div class="vote">
     <div class="incr">+</div>
     <div class="val">${comment.score}</div>
     <div class="decr">-</div>
+  </div>
   </div>
   <div class="details">
     <div class="one">
@@ -29,13 +31,29 @@ function commentsHTML(comment, row) {
         <div class="name">${comment.user.username}</div>
         <div class="time">${comment.createdAt}</div>
       </div>
+      <div class="upper">
       <div class="reply">
         <img src="images/icon-reply.svg" alt="" /> Reply
+      </div>
       </div>
     </div>
     <div class="two">
       ${comment.content}
     </div>
+  </div>
+  <div class="footer">
+          <div class="lower">
+            <div class="vote">
+              <div class="incr">+</div>
+              <div class="val">${comment.score}</div>
+              <div class="decr">-</div>
+            </div>
+          </div>
+          <div class="lower">
+            <div class="reply">
+              <img src="images/icon-reply.svg" alt="" /> Reply
+            </div>
+          </div>
   </div>
 </div>`;
   return html;
@@ -43,10 +61,12 @@ function commentsHTML(comment, row) {
 
 function commentMe(inners, row) {
   const innerHTML = `<div class="${row} me"data-value=${inners.id} me">
+  <div class="upper">
   <div class="vote">
     <div class="incr">+</div>
     <div class="val">${inners.score}</div>
     <div class="decr">-</div>
+  </div>
   </div>
   <div class="details">
     <div class="one">
@@ -60,15 +80,32 @@ function commentMe(inners, row) {
         <div class="you">you</div>
         <div class="time">${inners.createdAt}</div>
       </div>
+      <div class="upper">
       <div class="reply">
         <div class="delete"><img src="images/icon-delete.svg" alt="">  Delete</div>
         <div class="edit"><img src="images/icon-edit.svg" alt="">Edit</div>
+      </div>
       </div>
     </div>
     <div class="two">
     ${inners.content}
     </div>
   </div>
+  <div class="footer">
+  <div class="lower">
+    <div class="vote">
+      <div class="incr">+</div>
+      <div class="val">${inners.score}</div>
+      <div class="decr">-</div>
+    </div>
+  </div>
+  <div class="lower">
+  <div class="reply">
+  <div class="delete"><img src="images/icon-delete.svg" alt="">  Delete</div>
+  <div class="edit"><img src="images/icon-edit.svg" alt="">Edit</div>
+</div>
+  </div>
+</div>
 </div>`;
   return innerHTML;
 }
