@@ -55,9 +55,9 @@ function commentsHTML(comment, row) {
   <div class="footer">
           <div class="lower">
             <div class="vote">
-              <div class="incr">+</div>
+            <div class="decr">-</div>
               <div class="val">${comment.score}</div>
-              <div class="decr">-</div>
+              <div class="incr">+</div>
             </div>
           </div>
           <div class="lower">
@@ -112,9 +112,9 @@ function commentMe(inners, row) {
   <div class="footer">
   <div class="lower">
     <div class="vote">
-      <div class="incr">+</div>
+    <div class="decr">-</div>
       <div class="val">${inners.score}</div>
-      <div class="decr">-</div>
+      <div class="incr">+</div>
     </div>
   </div>
   <div class="lower">
@@ -145,6 +145,25 @@ function createReplyBox(row) {
     required
   ></textarea>
   <button type="submit" class="replyBtn">Reply</button>
+</div>`;
+  return html;
+}
+
+function createEditBox(row) {
+  html = `
+   <div class="inputBox ${row}">
+  <img
+    src="images/avatars/image-juliusomo.png"
+    class="dp"
+    id="default-dp"
+    alt=""
+  />
+  <textarea
+    class="addComment addUpdate"
+    placeholder="Add a comment..."
+    required
+  ></textarea>
+  <button type="submit" class="editBtn">Update</button>
 </div>`;
   return html;
 }
@@ -184,7 +203,6 @@ function deleteById(idDel) {
       prev.replies = prev.replies.filter((comment) => comment.id != idDel);
     }
   });
-  console.log(prevComment);
   localStorage.setItem("comment", JSON.stringify(prevComment));
   addRow();
 }
@@ -211,6 +229,75 @@ function deleteModal(e) {
       deleteById(deleteId);
     });
   });
+}
+// ========================Edit Functions=========================
+function editBar(e) {
+  console.log(e.target.closest(".ro"));
+  const giveout = e.target.closest(".ro");
+  const dataid = giveout.dataset.value;
+  const para = giveout.children[1].children[1].innerText;
+  // console.log(para);
+  if (e.target.classList.contains("edit")) {
+    const div = document.createElement("div");
+    div.dataset.value = dataid;
+    const name = para.split(" ")[0].slice(1);
+    console.log(name);
+    if (giveout.classList.contains("row")) {
+      div.innerHTML = createEditBox("row");
+    } else if (giveout.classList.contains("innerRow")) {
+      div.innerHTML = createEditBox("innerRow");
+    }
+    // console.log(div);
+    insertAfter(giveout, div);
+    giveout.remove();
+    const addComment = document.querySelectorAll(".addUpdate");
+    addComment.forEach((addC) => {
+      console.log(addC.parentNode.parentNode);
+      if (addC.parentNode.parentNode.dataset.value == dataid) {
+        addC.innerText = para;
+      }
+    });
+    const updateBtn = document.querySelectorAll(".editBtn");
+    updateBtn.forEach((update, i) => {
+      update.addEventListener("click", (e) => {
+        const prevComment = JSON.parse(localStorage.getItem("comment")) || [];
+        const prevs = prevComment.comments;
+        console.log(prevs);
+        const comment = addComment[i].value.split(" ").slice(1).join(" ");
+        console.log(comment);
+
+        function updated(r) {
+          if (r.id == dataid) {
+            console.log(r);
+            return {
+              id: Math.floor(Math.random() * (100 - 5)) + 5,
+              content: comment,
+              createdAt: "hey",
+              score: 0,
+              replyingTo: name,
+              user: {
+                image: {
+                  png: "./images/avatars/image-juliusomo.png",
+                  webp: "./images/avatars/image-juliusomo.webp",
+                },
+                username: "juliusomo",
+              },
+              replies: [],
+            };
+          } else {
+            return r;
+          }
+        }
+
+        for (let i = 0; i < prevs.length; i++) {
+          prevs[i].replies = prevs[i].replies.map(updated);
+        }
+        console.log(prevComment);
+        localStorage.setItem("comment", JSON.stringify(prevComment));
+        addRow();
+      });
+    });
+  }
 }
 
 // ==========================Add comment=======================
@@ -240,6 +327,43 @@ function addComment(e) {
   addRow();
 }
 
+function repliesFunc(dataid, name, addReply) {
+  const prevComment = JSON.parse(localStorage.getItem("comment")) || [];
+  const comment = addReply.value;
+  // console.log(comment);
+  jsonObj = {
+    id: Math.floor(Math.random() * (100 - 5)) + 5,
+    content: comment,
+    createdAt: "hey",
+    score: 0,
+    replyingTo: name,
+    user: {
+      image: {
+        png: "./images/avatars/image-juliusomo.png",
+        webp: "./images/avatars/image-juliusomo.webp",
+      },
+      username: "juliusomo",
+    },
+    replies: [],
+  };
+  const prevs = prevComment.comments;
+  // console.log(prevs);
+  prevs.forEach((prev) => {
+    if (prev.id == dataid) {
+      // console.log(prev);
+      prev.replies.push(jsonObj);
+    }
+    const rep = prev.replies;
+    rep.forEach((r) => {
+      if (r.id == dataid) {
+        prev.replies.push(jsonObj);
+      }
+    });
+  });
+  localStorage.setItem("comment", JSON.stringify(prevComment));
+  commentBox.value = "";
+  addRow();
+}
 // ==========================main function======================
 
 async function addRow() {
@@ -289,7 +413,7 @@ async function addRow() {
       const name =
         current.closest(".ro").children[1].children[0].children[0].children[1]
           .innerText;
-      console.log(name);
+      // console.log(name);
       const giveout = current.closest(".ro");
 
       if (e.target.classList.contains("reply")) {
@@ -302,48 +426,10 @@ async function addRow() {
         insertAfter(giveout, div);
         const rBtns = document.querySelectorAll(".replyBtn");
         const addReply = document.querySelectorAll(".addComment");
-        console.log(rBtns);
         rBtns.forEach((rBtn, i) => {
           rBtn.addEventListener("click", (e) => {
             const dataid = giveout.dataset.value;
-
-            console.log(addReply[i].value);
-            const prevComment =
-              JSON.parse(localStorage.getItem("comment")) || [];
-            const comment = addReply[i].value;
-            // console.log(comment);
-            jsonObj = {
-              id: Math.floor(Math.random() * (100 - 5)) + 5,
-              content: comment,
-              createdAt: "hey",
-              score: 0,
-              replyingTo: name,
-              user: {
-                image: {
-                  png: "./images/avatars/image-juliusomo.png",
-                  webp: "./images/avatars/image-juliusomo.webp",
-                },
-                username: "juliusomo",
-              },
-              replies: [],
-            };
-            const prevs = prevComment.comments;
-            // console.log(prevs);
-            prevs.forEach((prev) => {
-              if (prev.id == dataid) {
-                // console.log(prev);
-                prev.replies.push(jsonObj);
-              }
-              const rep = prev.replies;
-              rep.forEach((r) => {
-                if (r.id == dataid) {
-                  prev.replies.push(jsonObj);
-                }
-              });
-            });
-            localStorage.setItem("comment", JSON.stringify(prevComment));
-            commentBox.value = "";
-            addRow();
+            repliesFunc(dataid, name, addReply[i]);
           });
         });
       }
@@ -356,6 +442,14 @@ async function addRow() {
   deleteBtn.forEach((del) => {
     del.addEventListener("click", (e) => {
       deleteModal(e);
+    });
+  });
+
+  // =======================Edit======================
+  const editBtn = document.querySelectorAll(".edit");
+  editBtn.forEach((edit) => {
+    edit.addEventListener("click", (e) => {
+      editBar(e);
     });
   });
 }
