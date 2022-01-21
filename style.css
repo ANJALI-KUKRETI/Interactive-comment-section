@@ -117,6 +117,13 @@ body {
   color: var(--Grayish-Blue);
 }
 
+.rep {
+  display: flex;
+  font-weight: 700;
+}
+.rep .edit {
+  color: var(--Moderate-blue);
+}
 .inputBox {
   background-color: var(--White);
   height: 100px;
@@ -136,7 +143,9 @@ body {
   padding: 8px;
   color: var(--Grayish-Blue);
 }
-.send {
+
+.send,
+.replyBtn {
   padding: 8px;
   width: 80px;
   font-weight: 600;
@@ -183,7 +192,7 @@ body {
   color: var(--White);
   background-color: var(--Moderate-blue);
 }
-.me .reply {
+.rep {
   display: flex;
   justify-content: space-between;
   width: 10rem;
@@ -200,6 +209,11 @@ body {
 }
 .reply img {
   margin: 0px 8px;
+}
+
+.replyingTo {
+  color: var(--Moderate-blue);
+  font-weight: 700;
 }
 .footer {
   display: none;
@@ -273,8 +287,18 @@ body {
   .row {
     width: 20rem;
     padding: 10px 5px;
+  }
+  .com {
     flex-direction: column;
     align-items: center;
+  }
+  .innerRow {
+    padding: 10px 5px;
+    width: 19rem;
+    align-items: center;
+  }
+  .innerRow > .inputBox {
+    width: 19rem;
   }
   .details {
     width: 17rem;
@@ -298,6 +322,13 @@ body {
   .upper .reply {
     display: none;
   }
+  .upper .rep {
+    display: none;
+  }
+  .lower .rep {
+    display: flex;
+    width: 7rem;
+  }
   .lower .vote {
     width: 5rem;
     flex-direction: row;
@@ -309,15 +340,14 @@ body {
   .innerContainer {
     margin-left: 5px;
   }
-  .innerRow {
-    width: 19rem;
-    padding: 10px 5px;
-    flex-direction: column;
-    align-items: center;
+
+  .inputBox {
+    display: flex;
   }
   .innerRow .footer {
     width: 15rem;
   }
+
   .innerRow > .details {
     width: 14rem;
   }
@@ -330,4 +360,61 @@ body {
   .me .reply {
     width: 9rem;
   }
-} ;
+}
+
+.overlay {
+  position: absolute;
+
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  opacity: 0.5;
+}
+.modal {
+  width: 350px;
+  height: 220px;
+  padding: 20px;
+  border-radius: 5px;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  background-color: var(--White);
+}
+.cancel {
+  background-color: var(--Grayish-Blue);
+  border: none;
+  padding: 10px 25px;
+  font-weight: 700;
+  color: var(--White);
+  border-radius: 3px;
+  cursor: pointer;
+}
+.deleteBtn {
+  background-color: var(--Soft-Red);
+  border: none;
+  padding: 10px 25px;
+  color: var(--White);
+  font-weight: 700;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.modal h2 {
+  color: var(--Dark-blue);
+  font-weight: 700;
+}
+.modal p {
+  color: var(--Grayish-Blue);
+}
+.btns {
+  display: flex;
+  margin-top: 10px;
+  justify-content: space-evenly;
+}
+.hidden {
+  display: none;
+  pointer-events: none;
+}
