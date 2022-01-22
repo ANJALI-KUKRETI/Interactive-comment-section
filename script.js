@@ -327,6 +327,26 @@ function addComment(e) {
   addRow();
 }
 
+function incrDecr(e, task) {
+  const prevComment = JSON.parse(localStorage.getItem("comment")) || [];
+  const prevs = prevComment.comments;
+  const dataid = e.target.closest(".ro").dataset.value;
+  let value = e.target.parentNode.children[1].innerText;
+  task === "plus" ? value++ : value > 0 ? value-- : value;
+  prevs.forEach((prev) => {
+    if (prev.id == dataid) {
+      prev.score = value;
+    }
+    const rep = prev.replies;
+    rep.forEach((r) => {
+      if (r.id == dataid) {
+        r.score = value;
+      }
+    });
+  });
+  localStorage.setItem("comment", JSON.stringify(prevComment));
+  e.target.parentNode.children[1].innerText = value;
+}
 function repliesFunc(dataid, name, addReply) {
   const prevComment = JSON.parse(localStorage.getItem("comment")) || [];
   const comment = addReply.value;
@@ -450,6 +470,20 @@ async function addRow() {
   editBtn.forEach((edit) => {
     edit.addEventListener("click", (e) => {
       editBar(e);
+    });
+  });
+
+  // =====================upvote/Downvote================
+  const upvote = document.querySelectorAll(".incr");
+  upvote.forEach((up) => {
+    up.addEventListener("click", function (e) {
+      incrDecr(e, "plus");
+    });
+  });
+  const downvote = document.querySelectorAll(".decr");
+  downvote.forEach((down) => {
+    down.addEventListener("click", function (e) {
+      incrDecr(e, "minus");
     });
   });
 }

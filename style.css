@@ -145,7 +145,8 @@ body {
 }
 
 .send,
-.replyBtn {
+.replyBtn,
+.editBtn {
   padding: 8px;
   width: 80px;
   font-weight: 600;
