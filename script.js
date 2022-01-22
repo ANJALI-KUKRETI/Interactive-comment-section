@@ -7,10 +7,13 @@ const send = document.querySelector(".send");
 async function getData() {
   const res = await fetch("data.json");
   const data = await res.json();
-  localStorage.setItem("comment", JSON.stringify(data));
-  // console.log(data);
-  // return data;
+  const localData = JSON.parse(localStorage.getItem("comment"));
+  // console.log(localData);
+  const userData = localData ? localData : data;
+  localStorage.setItem("comment", JSON.stringify(userData));
+  addRow();
 }
+
 function insertAfter(Node, newNode) {
   Node.parentNode.insertBefore(newNode, Node.nextSibling);
 }
@@ -444,7 +447,7 @@ function repliesFunc(dataid, name, addReply) {
 async function addRow() {
   container.innerHTML = "";
   // const prevComment = await getData();
-  const prevComment = JSON.parse(localStorage.getItem("comment")) || [];
+  const prevComment = JSON.parse(localStorage.getItem("comment"));
 
   const comment = prevComment.comments;
   for (let i = 0; i < comment.length; i++) {
@@ -547,4 +550,4 @@ send.addEventListener("click", (e) => {
   addComment(e);
 });
 
-window.addEventListener("load", addRow);
+window.addEventListener("load", getData);
