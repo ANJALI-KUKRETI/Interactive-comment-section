@@ -9,7 +9,7 @@ async function getData() {
   const data = await res.json();
   localStorage.setItem("comment", JSON.stringify(data));
   // console.log(data);
-  return data;
+  // return data;
 }
 function insertAfter(Node, newNode) {
   Node.parentNode.insertBefore(newNode, Node.nextSibling);
@@ -443,8 +443,8 @@ function repliesFunc(dataid, name, addReply) {
 
 async function addRow() {
   container.innerHTML = "";
-  const prevComment = JSON.parse(localStorage.getItem("comment")) || [];
   // const prevComment = await getData();
+  const prevComment = JSON.parse(localStorage.getItem("comment")) || [];
 
   const comment = prevComment.comments;
   for (let i = 0; i < comment.length; i++) {
