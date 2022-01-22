@@ -232,7 +232,6 @@ function deleteModal(e) {
 }
 // ========================Edit Functions=========================
 function editBar(e) {
-  console.log(e.target.closest(".ro"));
   const giveout = e.target.closest(".ro");
   const dataid = giveout.dataset.value;
   const para = giveout.children[1].children[1].innerText;
@@ -241,7 +240,6 @@ function editBar(e) {
     const div = document.createElement("div");
     div.dataset.value = dataid;
     const name = para.split(" ")[0].slice(1);
-    console.log(name);
     if (giveout.classList.contains("row")) {
       div.innerHTML = createEditBox("row");
     } else if (giveout.classList.contains("innerRow")) {
@@ -252,7 +250,6 @@ function editBar(e) {
     giveout.remove();
     const addComment = document.querySelectorAll(".addUpdate");
     addComment.forEach((addC) => {
-      console.log(addC.parentNode.parentNode);
       if (addC.parentNode.parentNode.dataset.value == dataid) {
         addC.innerText = para;
       }
@@ -262,17 +259,15 @@ function editBar(e) {
       update.addEventListener("click", (e) => {
         const prevComment = JSON.parse(localStorage.getItem("comment")) || [];
         const prevs = prevComment.comments;
-        console.log(prevs);
         const comment = addComment[i].value.split(" ").slice(1).join(" ");
-        console.log(comment);
+        const commentOut = addComment[i].value;
 
         function updated(r) {
           if (r.id == dataid) {
-            console.log(r);
             return {
               id: Math.floor(Math.random() * (100 - 5)) + 5,
               content: comment,
-              createdAt: "hey",
+              createdAt: "pending",
               score: 0,
               replyingTo: name,
               user: {
@@ -288,11 +283,32 @@ function editBar(e) {
             return r;
           }
         }
-
+        function updatedOut(r) {
+          if (r.id == dataid) {
+            console.log(r);
+            return {
+              id: Math.floor(Math.random() * (100 - 5)) + 5,
+              content: commentOut,
+              createdAt: "pending",
+              score: 0,
+              replyingTo: "",
+              user: {
+                image: {
+                  png: "./images/avatars/image-juliusomo.png",
+                  webp: "./images/avatars/image-juliusomo.webp",
+                },
+                username: "juliusomo",
+              },
+              replies: [],
+            };
+          } else {
+            return r;
+          }
+        }
+        prevComment.comments = prevs.map(updatedOut);
         for (let i = 0; i < prevs.length; i++) {
           prevs[i].replies = prevs[i].replies.map(updated);
         }
-        console.log(prevComment);
         localStorage.setItem("comment", JSON.stringify(prevComment));
         addRow();
       });
@@ -310,7 +326,7 @@ function addComment(e) {
   jsonObj = {
     id: Math.floor(Math.random() * (100 - 5)) + 5,
     content: comment,
-    createdAt: "hey",
+    createdAt: "pending",
     score: 0,
     user: {
       image: {
@@ -326,6 +342,45 @@ function addComment(e) {
   commentBox.value = "";
   addRow();
 }
+
+// function tellCreatedAt(creationTime) {
+//   // console.log(creationTime);
+//   const prevComment = JSON.parse(localStorage.getItem("comment")) || [];
+//   const prevs = prevComment.comments;
+//   prevs.forEach((prev) => {
+//     if (prev.username === prevComment.currentUser.username) {
+//       console.log(prev.createdAt);
+//     }
+//   });
+//   let today = new Date();
+//   let diff = today.getTime() - creationTime.getTime();
+//   console.log(diff);
+//   let sec = (diff / 1000).toFixed(0);
+//   let min = (diff / (1000 * 60)).toFixed(0);
+//   let hrs = (diff / (1000 * 60 * 60)).toFixed(0);
+//   let days = (diff / (1000 * 60 * 60 * 24)).toFixed(0);
+//   let weeks = (diff / (1000 * 60 * 60 * 24 * 7)).toFixed(0);
+//   let months = (diff / (1000 * 60 * 60 * 24 * 31)).toFixed(0);
+//   let years = (diff / (1000 * 60 * 60 * 24 * 365)).toFixed(0);
+
+//   if (sec < 60) {
+//     return "Now";
+//   } else if (min < 60) {
+//     return min + " min ago";
+//   } else if (hrs < 24) {
+//     return hrs + " hr ago";
+//   } else if (days < 7) {
+//     return days + " day ago";
+//   } else if (weeks < 4) {
+//     return weeks + " week ago";
+//   } else if (months < 12) {
+//     return months + " month ago";
+//   } else {
+//     return years + " year ago";
+//   }
+// }
+
+// ====================Increment/Decrement function======================
 
 function incrDecr(e, task) {
   const prevComment = JSON.parse(localStorage.getItem("comment")) || [];
@@ -354,7 +409,7 @@ function repliesFunc(dataid, name, addReply) {
   jsonObj = {
     id: Math.floor(Math.random() * (100 - 5)) + 5,
     content: comment,
-    createdAt: "hey",
+    createdAt: "pending",
     score: 0,
     replyingTo: name,
     user: {
