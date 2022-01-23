@@ -64,7 +64,7 @@ body {
 .details {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   width: 36rem;
 }
 .one {
@@ -75,7 +75,7 @@ body {
 }
 .personal {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   width: 14rem;
 }
@@ -123,6 +123,10 @@ body {
 }
 .rep .edit {
   color: var(--Moderate-blue);
+  cursor: pointer;
+}
+.rep .edit img {
+  margin: 0px 6px;
 }
 .inputBox {
   background-color: var(--White);
@@ -185,18 +189,22 @@ body {
   width: 30rem;
 }
 
-.me .personal {
+.innerRow .personal {
   width: 16rem;
 }
+.innerRow .addComment {
+  width: 26rem;
+}
 .you {
-  padding: 2px 5px;
+  padding: 2px 6px 3px 6px;
+  border-radius: 2px;
   color: var(--White);
   background-color: var(--Moderate-blue);
 }
 .rep {
   display: flex;
   justify-content: space-between;
-  width: 10rem;
+  width: 8rem;
 }
 .delete {
   color: var(--Soft-Red);
@@ -209,7 +217,7 @@ body {
   color: var(--Light-grayish-blue);
 }
 .reply img {
-  margin: 0px 8px;
+  margin: 0px 2px;
 }
 
 .replyingTo {
@@ -294,6 +302,9 @@ body {
   .addComment {
     width: 25rem;
   }
+  .innerRow .addComment {
+    width: 22rem;
+  }
   .innerRow {
     width: 33rem;
   }
@@ -319,7 +330,10 @@ body {
     width: 32rem;
   }
   .addComment {
-    width: 25rem;
+    width: 20rem;
+  }
+  .innerRow .addComment {
+    width: 16rem;
   }
   .innerRow {
     width: 27rem;

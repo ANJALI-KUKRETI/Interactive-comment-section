@@ -209,6 +209,13 @@ function deleteById(idDel) {
   localStorage.setItem("comment", JSON.stringify(prevComment));
   addRow();
 }
+
+function hideModal(over, mod) {
+  over.style.display = "none";
+  mod.style.display = "none";
+  document.body.style.overflowY = "auto";
+}
+
 function deleteModal(e) {
   const deleteId = e.target.closest(".ro").dataset.value;
   createModal();
@@ -219,21 +226,19 @@ function deleteModal(e) {
 
   cancel.forEach((can, i) => {
     can.addEventListener("click", () => {
-      overlay[i].style.display = "none";
-      modal[i].style.display = "none";
-      document.body.style.overflowY = "auto";
+      hideModal(overlay[i], modal[i]);
     });
   });
   deleteInner.forEach((del, i) => {
     del.addEventListener("click", () => {
-      overlay[i].style.display = "none";
-      modal[i].style.display = "none";
-      document.body.style.overflowY = "auto";
+      hideModal(overlay[i], modal[i]);
       deleteById(deleteId);
     });
   });
 }
+
 // ========================Edit Functions=========================
+
 function editBar(e) {
   const giveout = e.target.closest(".ro");
   const dataid = giveout.dataset.value;
@@ -254,7 +259,7 @@ function editBar(e) {
     const addComment = document.querySelectorAll(".addUpdate");
     addComment.forEach((addC) => {
       if (addC.parentNode.parentNode.dataset.value == dataid) {
-        addC.innerText = para;
+        addC.innerText = para.split(" ").slice(1).join(" ");
       }
     });
     const updateBtn = document.querySelectorAll(".editBtn");
@@ -262,7 +267,7 @@ function editBar(e) {
       update.addEventListener("click", (e) => {
         const prevComment = JSON.parse(localStorage.getItem("comment")) || [];
         const prevs = prevComment.comments;
-        const comment = addComment[i].value.split(" ").slice(1).join(" ");
+        const comment = addComment[i].value;
         const commentOut = addComment[i].value;
 
         function updated(r) {
@@ -270,7 +275,7 @@ function editBar(e) {
             return {
               id: Math.floor(Math.random() * (100 - 5)) + 5,
               content: comment,
-              createdAt: "pending",
+              createdAt: "Now",
               score: 0,
               replyingTo: name,
               user: {
@@ -288,11 +293,10 @@ function editBar(e) {
         }
         function updatedOut(r) {
           if (r.id == dataid) {
-            console.log(r);
             return {
               id: Math.floor(Math.random() * (100 - 5)) + 5,
               content: commentOut,
-              createdAt: "pending",
+              createdAt: "Now",
               score: 0,
               replyingTo: "",
               user: {
@@ -329,7 +333,7 @@ function addComment(e) {
   jsonObj = {
     id: Math.floor(Math.random() * (100 - 5)) + 5,
     content: comment,
-    createdAt: "pending",
+    createdAt: "Now",
     score: 0,
     user: {
       image: {
@@ -340,10 +344,14 @@ function addComment(e) {
     },
     replies: [],
   };
-  prevComment.comments.push(jsonObj);
-  localStorage.setItem("comment", JSON.stringify(prevComment));
-  commentBox.value = "";
-  addRow();
+  if (jsonObj.content.length > 0) {
+    prevComment.comments.push(jsonObj);
+    localStorage.setItem("comment", JSON.stringify(prevComment));
+    commentBox.value = "";
+    addRow();
+  } else {
+    alert("Please enter the text");
+  }
 }
 
 // function tellCreatedAt(creationTime) {
@@ -405,6 +413,7 @@ function incrDecr(e, task) {
   localStorage.setItem("comment", JSON.stringify(prevComment));
   e.target.parentNode.children[1].innerText = value;
 }
+
 function repliesFunc(dataid, name, addReply) {
   const prevComment = JSON.parse(localStorage.getItem("comment")) || [];
   const comment = addReply.value;
@@ -412,7 +421,7 @@ function repliesFunc(dataid, name, addReply) {
   jsonObj = {
     id: Math.floor(Math.random() * (100 - 5)) + 5,
     content: comment,
-    createdAt: "pending",
+    createdAt: "Now",
     score: 0,
     replyingTo: name,
     user: {
@@ -426,21 +435,25 @@ function repliesFunc(dataid, name, addReply) {
   };
   const prevs = prevComment.comments;
   // console.log(prevs);
-  prevs.forEach((prev) => {
-    if (prev.id == dataid) {
-      // console.log(prev);
-      prev.replies.push(jsonObj);
-    }
-    const rep = prev.replies;
-    rep.forEach((r) => {
-      if (r.id == dataid) {
+  if (jsonObj.content.length > 0) {
+    prevs.forEach((prev) => {
+      if (prev.id == dataid) {
+        // console.log(prev);
         prev.replies.push(jsonObj);
       }
+      const rep = prev.replies;
+      rep.forEach((r) => {
+        if (r.id == dataid) {
+          prev.replies.push(jsonObj);
+        }
+      });
     });
-  });
-  localStorage.setItem("comment", JSON.stringify(prevComment));
-  commentBox.value = "";
-  addRow();
+    localStorage.setItem("comment", JSON.stringify(prevComment));
+    commentBox.value = "";
+    addRow();
+  } else {
+    alert("Please enter the text");
+  }
 }
 // ==========================main function======================
 
@@ -480,36 +493,38 @@ async function addRow() {
       }
     }
   }
-
   // ===================Reply=================
 
   const reply = document.querySelectorAll(".reply");
   reply.forEach((rep) => {
+    let flag = 0;
     rep.addEventListener("click", (e) => {
-      const current = e.currentTarget;
+      if (flag == 0) {
+        const current = e.currentTarget;
+        const name =
+          current.closest(".ro").children[1].children[0].children[0].children[1]
+            .innerText;
+        // console.log(name);
+        const giveout = current.closest(".ro");
 
-      const name =
-        current.closest(".ro").children[1].children[0].children[0].children[1]
-          .innerText;
-      // console.log(name);
-      const giveout = current.closest(".ro");
-
-      if (e.target.classList.contains("reply")) {
-        const div = document.createElement("div");
-        if (giveout.classList.contains("row")) {
-          div.innerHTML = createReplyBox("row");
-        } else if (giveout.classList.contains("innerRow")) {
-          div.innerHTML = createReplyBox("innerRow");
-        }
-        insertAfter(giveout, div);
-        const rBtns = document.querySelectorAll(".replyBtn");
-        const addReply = document.querySelectorAll(".addComment");
-        rBtns.forEach((rBtn, i) => {
-          rBtn.addEventListener("click", (e) => {
-            const dataid = giveout.dataset.value;
-            repliesFunc(dataid, name, addReply[i]);
+        if (e.target.classList.contains("reply")) {
+          const div = document.createElement("div");
+          if (giveout.classList.contains("row")) {
+            div.innerHTML = createReplyBox("row");
+          } else if (giveout.classList.contains("innerRow")) {
+            div.innerHTML = createReplyBox("innerRow");
+          }
+          insertAfter(giveout, div);
+          const rBtns = document.querySelectorAll(".replyBtn");
+          const addReply = document.querySelectorAll(".addComment");
+          rBtns.forEach((rBtn, i) => {
+            rBtn.addEventListener("click", (e) => {
+              const dataid = giveout.dataset.value;
+              repliesFunc(dataid, name, addReply[i]);
+            });
           });
-        });
+        }
+        flag = 1;
       }
     });
   });
